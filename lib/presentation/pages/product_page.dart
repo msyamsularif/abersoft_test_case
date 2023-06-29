@@ -1,4 +1,5 @@
 import 'package:abersoft_test_case/presentation/bloc/product/product_cubit.dart';
+import 'package:abersoft_test_case/presentation/pages/create_product_page.dart';
 import 'package:abersoft_test_case/presentation/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,6 +30,18 @@ class _ProductPageState extends State<ProductPage> {
           'Our Portfolio',
         ),
         automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            onPressed: () =>
+                Navigator.pushNamed(context, CreateProductPage.routName),
+            iconSize: 24,
+            splashRadius: 20,
+            icon: const Icon(
+              Icons.add_circle,
+              color: Colors.blueAccent,
+            ),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16).copyWith(bottom: 8),
@@ -53,7 +66,7 @@ class _ProductPageState extends State<ProductPage> {
                         color: Colors.blueAccent,
                       ),
                     );
-                  } else if (state is ProductLoaded) {
+                  } else if (state is GetProductSuccess) {
                     return ListView.builder(
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
@@ -105,7 +118,7 @@ class _ProductPageState extends State<ProductPage> {
                         color: Colors.blueAccent,
                       ),
                     );
-                  } else if (state is ProductLoaded) {
+                  } else if (state is GetProductSuccess) {
                     return GridView.builder(
                       shrinkWrap: true,
                       gridDelegate:

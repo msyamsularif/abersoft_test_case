@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:abersoft_test_case/core/domain/error/failures.dart';
 import 'package:abersoft_test_case/core/utils/constants.dart';
 import 'package:abersoft_test_case/data/datasource/product/product_remote_data_source.dart';
@@ -12,17 +14,56 @@ class ProductRemoteDataSourceImpl extends ProductRemoteDataSource {
   @override
   Future<Either<Failure, ProductDataModel>> createProduct({
     required String name,
-    required String image,
+    required File image,
     required String desc,
   }) async {
-    // TODO: implement createProduct
-    throw UnimplementedError();
+    try {
+      String fileName = image.path.split('/').last;
+
+      final formData = FormData.fromMap({
+        'name': name,
+        'productImage': await MultipartFile.fromFile(
+          image.path,
+          filename: fileName,
+        ),
+        'productDescription': desc,
+      });
+
+      Response response = await dio.post(
+        ConstantName.baseUrl + ConstantName.pathUrlProduct,
+        options: Options(
+          headers: {
+            'requirestoken': true,
+          },
+          contentType: Headers.formUrlEncodedContentType,
+        ),
+        data: formData,
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = response.data;
+        return right(ProductDataModel.fromJson(jsonData));
+      } else {
+        throw DioException;
+      }
+    } catch (e) {
+      if (e is DioException) {
+        // Bad Request: Retrieve error message from response body
+
+        final errorResponse = e.response?.data;
+        final errorMessage = errorResponse['message'];
+
+        left(ServerFailure(message: errorMessage));
+      }
+
+      return left(ServerFailure(message: 'Failed to create data'));
+    }
   }
 
   @override
   Future<Either<Failure, ProductResponseDataModel>> getAllProduct() async {
     try {
-      Response response = await dio.post(
+      Response response = await dio.get(
         ConstantName.baseUrl + ConstantName.pathUrlProduct,
         options: Options(
           headers: {

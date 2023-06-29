@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 
@@ -17,7 +19,7 @@ class CreateProductUseCase
       CreateProductParam params) async {
     return await productRepository.createProduct(
       name: params.name,
-      image: params.imageUrl,
+      image: params.image,
       desc: params.desc,
     );
   }
@@ -26,15 +28,15 @@ class CreateProductUseCase
 class CreateProductParam extends Equatable {
   final int id;
   final String name;
-  final String imageUrl;
+  final File image;
   final String desc;
 
   const CreateProductParam({
     required this.id,
     required this.name,
-    required this.imageUrl,
+    required this.image,
     required this.desc,
   });
   @override
-  List<Object?> get props => [id, name, imageUrl, desc];
+  List<Object?> get props => [id, name, image, desc];
 }

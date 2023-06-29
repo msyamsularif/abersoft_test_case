@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:abersoft_test_case/core/domain/usecase/use_case.dart';
 import 'package:abersoft_test_case/data/models/product_data_model.dart';
 import 'package:abersoft_test_case/domain/usecase/create_product_use_case.dart';
@@ -26,10 +28,31 @@ class ProductCubit extends Cubit<ProductState> {
     emit(
       listProductOrFailure.fold(
         (l) => ProductFailure(message: l.failureMessage()),
-        (r) => ProductLoaded(
+        (r) => GetProductSuccess(
           bestProducts: r.bestProducts,
           allProducts: r.allProducts,
         ),
+      ),
+    );
+  }
+
+  void createProduct({
+    required String name,
+    required File image,
+    required String desc,
+  }) async {
+    emit(ProductLoading());
+
+    final uniqId = DateTime.now().millisecondsSinceEpoch;
+
+    final productOrFailure = await _createProductUseCase(
+      CreateProductParam(id: uniqId, name: name, image: image, desc: desc),
+    );
+
+    emit(
+      productOrFailure.fold(
+        (l) => ProductFailure(message: l.failureMessage()),
+        (r) => CreateProductSuccess(productDataModel: r),
       ),
     );
   }

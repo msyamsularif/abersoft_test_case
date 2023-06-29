@@ -2,6 +2,7 @@ import 'package:abersoft_test_case/app.dart';
 import 'package:abersoft_test_case/core/utils/theme.dart';
 import 'package:abersoft_test_case/presentation/bloc/auth/auth_cubit.dart';
 import 'package:abersoft_test_case/presentation/bloc/product/product_cubit.dart';
+import 'package:abersoft_test_case/presentation/pages/create_product_page.dart';
 import 'package:abersoft_test_case/presentation/pages/login_page.dart';
 import 'package:abersoft_test_case/presentation/pages/product_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,6 +39,7 @@ class MainApp extends StatelessWidget {
         routes: {
           LoginPage.routName: (context) => const LoginPage(),
           ProductPage.routName: (context) => const ProductPage(),
+          CreateProductPage.routName: (context) => const CreateProductPage(),
         },
       ),
     );

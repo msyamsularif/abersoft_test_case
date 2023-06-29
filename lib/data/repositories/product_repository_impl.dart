@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:abersoft_test_case/core/domain/error/failures.dart';
 import 'package:abersoft_test_case/data/datasource/product/product_remote_data_source.dart';
 import 'package:abersoft_test_case/data/models/product_data_model.dart';
@@ -11,7 +13,7 @@ class ProductRepositoryImpl extends ProductRepository {
   @override
   Future<Either<Failure, ProductDataModel>> createProduct({
     required String name,
-    required String image,
+    required File image,
     required String desc,
   }) async {
     return productRemoteDataSource.createProduct(

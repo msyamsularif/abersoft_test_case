@@ -372,9 +372,8 @@ class _CTTextFieldState extends State<CTTextField> {
             maxLengthEnforcement: widget.maxLength == null
                 ? MaxLengthEnforcement.none
                 : MaxLengthEnforcement.enforced,
-            maxLines: !widget._isTextArea ? 1 : 5,
-            minLines: !widget._isTextArea ? 1 : 3,
-            expands: !widget._isTextArea ? false : true,
+            maxLines: !widget._isTextArea ? 1 : 8,
+            minLines: !widget._isTextArea ? 1 : 8,
             autofocus: widget.autofocus,
             controller: widget.controller,
             keyboardType: widget.keyboardType,
@@ -562,11 +561,7 @@ class _CTTextFieldState extends State<CTTextField> {
           if (widget._isTextArea) {
             return SizedBox(
               height: 96,
-              child: Row(
-                children: [
-                  Expanded(child: textFormFieldWidget),
-                ],
-              ),
+              child: textFormFieldWidget,
             );
           }
           return textFormFieldWidget;

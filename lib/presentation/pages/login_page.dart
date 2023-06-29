@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     );
                   } else {
-                    return const Text('LOGIN');
+                    return const Text('login');
                   }
                 },
               ),

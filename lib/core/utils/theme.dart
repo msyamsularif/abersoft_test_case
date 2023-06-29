@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 Color primaryColor = const Color(0xFF0389F7);
+Color disableColor = Colors.grey.shade300;
 
 ThemeData get themeData {
   return ThemeData(
@@ -10,27 +11,38 @@ ThemeData get themeData {
       elevation: 0,
       foregroundColor: Colors.black,
       titleTextStyle: TextStyle(
-        fontWeight: FontWeight.w600,
-        fontSize: 24,
-        color: Colors.black
-        
-      ),
+          fontWeight: FontWeight.w600, fontSize: 24, color: Colors.black),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
-        foregroundColor: const MaterialStatePropertyAll(Colors.white),
         textStyle: const MaterialStatePropertyAll(TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 12,
           color: Colors.white,
         )),
-        backgroundColor: MaterialStatePropertyAll(primaryColor),
+        foregroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.disabled)) {
+            return Colors.grey;
+          }
+          return Colors.white;
+        }),
+        backgroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.disabled)) {
+            return disableColor;
+          }
+          return primaryColor;
+        }),
         shape: MaterialStatePropertyAll(
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
         shadowColor: const MaterialStatePropertyAll(Colors.grey),
         fixedSize: const MaterialStatePropertyAll(Size(double.infinity, 37)),
-        elevation: const MaterialStatePropertyAll(6),
+        elevation: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.disabled)) {
+            return 0;
+          }
+          return 6;
+        }),
       ),
     ),
   );
