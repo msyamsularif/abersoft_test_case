@@ -1,6 +1,5 @@
 import 'package:abersoft_test_case/core/utils/constants.dart';
 import 'package:abersoft_test_case/domain/usecase/auth_use_case.dart';
-import 'package:abersoft_test_case/injection_container.dart' as di;
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -10,10 +9,13 @@ part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final AuthUseCase _authUseCase;
+  final FlutterSecureStorage _flutterSecureStorage;
 
   AuthCubit({
     required AuthUseCase authUseCase,
-  })  : _authUseCase = authUseCase,
+    required FlutterSecureStorage flutterSecureStorage,
+  })  : _flutterSecureStorage = flutterSecureStorage,
+        _authUseCase = authUseCase,
         super(AuthInitial());
 
   void signIn({required String username, required String password}) async {
@@ -28,7 +30,7 @@ class AuthCubit extends Cubit<AuthState> {
         (l) => AuthFailure(message: l.failureMessage()),
         (r) {
           // Create secure storage for save token
-          final secureStorage = di.sl<FlutterSecureStorage>();
+          final secureStorage = _flutterSecureStorage;
 
           secureStorage.write(key: ConstantName.keyToken, value: r.token);
 
