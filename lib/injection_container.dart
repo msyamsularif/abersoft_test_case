@@ -50,7 +50,9 @@ Future<void> init() async {
   );
 
   // service locator cubit
-  sl.registerFactory<AuthCubit>(() => AuthCubit(authUseCase: sl()));
+  sl.registerFactory<AuthCubit>(
+    () => AuthCubit(authUseCase: sl(), flutterSecureStorage: sl()),
+  );
   sl.registerFactory<ProductCubit>(
     () => ProductCubit(createProductUseCase: sl(), getProductUseCase: sl()),
   );
