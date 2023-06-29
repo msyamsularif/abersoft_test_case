@@ -21,7 +21,7 @@ class ProductRemoteDataSourceImpl extends ProductRemoteDataSource {
       String fileName = image.path.split('/').last;
 
       final formData = FormData.fromMap({
-        'name': name,
+        'productName': name,
         'productImage': await MultipartFile.fromFile(
           image.path,
           filename: fileName,
@@ -42,7 +42,10 @@ class ProductRemoteDataSourceImpl extends ProductRemoteDataSource {
 
       if (response.statusCode == 200) {
         final data = response.data;
-        return right(ProductDataModel.fromJson(data));
+
+        ProductDataModel product = ProductDataModel.fromJson(data);
+        
+        return right(product);
       } else {
         throw DioException;
       }
