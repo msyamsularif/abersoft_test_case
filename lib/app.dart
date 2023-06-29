@@ -1,17 +1,18 @@
-import 'dart:developer';
-
+import 'package:abersoft_test_case/app/service/bloc_observer.dart';
+import 'package:abersoft_test_case/app/service/dio_config_service.dart';
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
+import 'injection_container.dart' as di;
 
-class AppBlocObserver extends BlocObserver {
-  @override
-  void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
-    super.onChange(bloc, change);
-    log('onChange(${bloc.runtimeType}, $change)');
-  }
+class App {
+  static Future<void> init() async {
+    // Service Locator
+    await di.init();
 
-  @override
-  void onError(BlocBase<dynamic> bloc, Object error, StackTrace stackTrace) {
-    log('onError(${bloc.runtimeType}, $error, $stackTrace)');
-    super.onError(bloc, error, stackTrace);
+    // Configure bloc delegate
+    Bloc.observer = AppBlocObserver();
+
+    // Dio Interceptors
+    di.sl<Dio>().interceptors.add(DioLoggingInterceptors());
   }
 }
