@@ -80,7 +80,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     );
                   } else if (state is AuthLoaded) {
-                    Navigator.pushNamed(context, ProductPage.routName);
+                    // Navigator.pushNamed(context, ProductPage.routName);
+                    Navigator.pushNamedAndRemoveUntil(context, ProductPage.routName, (route) => false);
                   }
                 },
                 builder: (context, state) {

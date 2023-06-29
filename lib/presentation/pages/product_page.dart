@@ -121,12 +121,11 @@ class _ProductPageState extends State<ProductPage> {
                   } else if (state is GetProductSuccess) {
                     return GridView.builder(
                       shrinkWrap: true,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 66,
                         mainAxisSpacing: 27,
-                        mainAxisExtent: 162,
+                        mainAxisExtent: 160,
                       ),
                       itemCount: state.allProducts.length,
                       itemBuilder: (context, index) {

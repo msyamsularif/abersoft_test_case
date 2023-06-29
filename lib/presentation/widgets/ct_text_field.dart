@@ -2,36 +2,6 @@ import 'package:abersoft_test_case/core/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// Retina text field component
-///
-/// ---
-///
-/// **Notes**
-///
-/// Berikut beberapa catatan pada widget [CTTextField] dimana merupakan
-/// workaround yang memungkinkan dalam mengimplementasikan komponen input
-/// text pada desain sistem pada figma
-///
-/// * Widget ini dalam pembuatannya menggunakan widget
-///   [TextFormField] bawaan flutter.
-/// * Jarak `helperText` dan `errorText` dengan text inputnya tidak dapat
-///   diubah karena pada [TextFormField] tidak menyediakan API untuk
-///   melakukan override property tersebut.
-///   * Effort terlalu besar jika dilakukan perbaikan karena harus merombak
-///     ulang text field dan harus melakukan handle validator secara manual.
-/// * Ketika state error dan `suffixIcon` diaktifkan makan akan muncul 2 icon
-///   di sebelah kanan secara bersamaan dan terlihat bahwa 2 icon tersebut sedikit
-///   mengecil jika dibandingkan dengan 1 icon saja hal tersebut disebabkan
-///   karena propery `suffixIcon` pada [TextFormField] bawaan flutter pada
-///   dasarnya dibuat untuk menampung 1 buah icon saja, jika dipaksakan akan
-///   sulit untuk mengatur ukuran constraint pada icon tersebut.
-///   * Effort terlalu besar jika dilakukan perbaikan karena harus merombak
-///     ulang text field.
-///   * Penggunaan icon disisipkan pada `suffixIcon` & `prefixIcon`,
-///     bukan di `suffix` atau `prefix` karena ketika widget unfocus apabila
-///     icon diletakan pada `suffix` atau `prefix` icon akan hilang dan
-///     menyisakan space kosong.
-
 class CTTextField extends StatefulWidget {
   const CTTextField._({
     Key? key,
@@ -43,7 +13,6 @@ class CTTextField extends StatefulWidget {
     this.enabled = true,
     this.errorText,
     this.helperText,
-    this.helperStyle,
     this.prefixIcon,
     this.suffixIcon,
     this.placeholder,
@@ -57,7 +26,6 @@ class CTTextField extends StatefulWidget {
     this.contentPadding,
     this.labelStyle,
     this.hintStyle,
-    this.isDropDown = false,
     this.onEditingComplete,
     this.textCapitalization = TextCapitalization.none,
     this.textAlignVertical,
@@ -72,10 +40,9 @@ class CTTextField extends StatefulWidget {
   })  : _isTextArea = isTextArea,
         super(key: key);
 
-  /// A retina design text field
+  /// A custom text field
   ///
-  /// Brings out the same behavior from [TextFormField] with a touch of retina
-  /// design system implementation.
+  /// Brings out the same behavior from [TextFormField]
   const CTTextField({
     Key? key,
     TextEditingController? controller,
@@ -99,7 +66,6 @@ class CTTextField extends StatefulWidget {
     String? labelText,
     TextStyle? labelStyle,
     TextStyle? hintStyle,
-    bool isDropDown = false,
     TextCapitalization textCapitalization = TextCapitalization.none,
     TextAlignVertical textAlignVertical = TextAlignVertical.top,
     AutovalidateMode? autovalidateMode = AutovalidateMode.disabled,
@@ -119,7 +85,6 @@ class CTTextField extends StatefulWidget {
           enabled: enabled,
           errorText: errorText,
           helperText: helperText,
-          helperStyle: helperStyle,
           prefixIcon: prefixIcon,
           suffixIcon: suffixIcon,
           placeholder: placeholder,
@@ -134,7 +99,6 @@ class CTTextField extends StatefulWidget {
           labelText: labelText,
           labelStyle: labelStyle,
           hintStyle: hintStyle,
-          isDropDown: isDropDown,
           textCapitalization: textCapitalization,
           autovalidateMode: autovalidateMode,
           textInputAction: textInputAction,
@@ -146,7 +110,7 @@ class CTTextField extends StatefulWidget {
           initialValue: initialValue,
         );
 
-  /// A retina design text area
+  /// A custom text area
   ///
   /// Brings out the same behavior from [TextFormField] with larger input area
   /// and suitable for bulk character input and multiline support.
@@ -166,7 +130,6 @@ class CTTextField extends StatefulWidget {
     String? labelText,
     TextStyle? labelStyle,
     TextStyle? hintStyle,
-    bool isDropDown = false,
     Function(String)? onEditingComplete,
     TextAlignVertical textAlignVertical = TextAlignVertical.top,
     AutovalidateMode? autovalidateMode = AutovalidateMode.disabled,
@@ -185,7 +148,6 @@ class CTTextField extends StatefulWidget {
           enabled: enabled,
           errorText: errorText,
           helperText: helperText,
-          helperStyle: helperStyle,
           placeholder: placeholder,
           readOnly: readOnly,
           onChanged: onChanged,
@@ -195,7 +157,6 @@ class CTTextField extends StatefulWidget {
           labelText: labelText,
           labelStyle: labelStyle,
           hintStyle: hintStyle,
-          isDropDown: isDropDown,
           textAlignVertical: textAlignVertical,
           autovalidateMode: autovalidateMode,
           validator: validator,
@@ -213,7 +174,6 @@ class CTTextField extends StatefulWidget {
   final bool enabled;
   final String? errorText;
   final String? helperText;
-  final TextStyle? helperStyle;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final String? placeholder;
@@ -226,7 +186,6 @@ class CTTextField extends StatefulWidget {
   final String? labelText;
   final TextStyle? labelStyle;
   final TextStyle? hintStyle;
-  final bool isDropDown;
   final Function()? onEditingComplete;
   final TextCapitalization textCapitalization;
   final TextAlignVertical? textAlignVertical;
@@ -239,8 +198,6 @@ class CTTextField extends StatefulWidget {
   final int? maxLength;
 
   /// The base style of placeholder and text value.
-  ///
-  /// Defaults to [RTTypo.body2] (Text Color is not applied).
   final TextStyle? style;
 
   /// The padding for the input decoration's container.
@@ -328,9 +285,6 @@ class _CTTextFieldState extends State<CTTextField> {
     // gap between prefix text & input field
     const double textPrefixToInputFieldGap = 16;
 
-    // gap between error icon & suffix icon
-    const double errorIconToSuffixIconGap = 16;
-
     // initial value to content padding
     const EdgeInsets defaultContentPadding = EdgeInsets.symmetric(
       vertical: 12,
@@ -380,7 +334,7 @@ class _CTTextFieldState extends State<CTTextField> {
             obscureText: widget.obscureText,
             onChanged: widget.onChanged,
             textAlignVertical: widget.textAlignVertical,
-            readOnly: widget.isDropDown ? true : widget.readOnly,
+            readOnly: widget.readOnly,
             inputFormatters: widget.inputFormatters,
             textCapitalization: widget.textCapitalization,
             enabled: widget.enabled,
@@ -406,7 +360,6 @@ class _CTTextFieldState extends State<CTTextField> {
             onTap: widget.onTap,
             decoration: InputDecoration(
               isCollapsed: widget.prefixIcon is Text,
-              counterText: '',
               labelText: widget.labelText,
               labelStyle: widget.labelStyle,
               filled: true,
@@ -445,9 +398,6 @@ class _CTTextFieldState extends State<CTTextField> {
                         widget.errorText != null ||
                         isValidatorError) ...[
                       if (widget.suffixIcon != null) iconSquareSize,
-                      if (widget.suffixIcon != null &&
-                          (widget.errorText != null || isValidatorError))
-                        errorIconToSuffixIconGap,
                       if (widget.errorText != null || isValidatorError)
                         iconSquareSize,
                       iconToInputFieldGap,
@@ -469,7 +419,9 @@ class _CTTextFieldState extends State<CTTextField> {
                     ? null
                     : widget.prefixIcon is! Text
                         ? SizedBox.square(
-                            dimension: iconSquareSize, child: widget.prefixIcon)
+                            dimension: iconSquareSize,
+                            child: widget.prefixIcon,
+                          )
                         : DefaultTextStyle(
                             softWrap: false,
                             style: baseTextStyle.copyWith(
@@ -479,33 +431,14 @@ class _CTTextFieldState extends State<CTTextField> {
                           ),
               ),
               suffixIcon: () {
-                final Widget errorIcon = Icon(
-                  Icons.dangerous,
-                  color: Colors.red.shade400,
-                );
-                final bool isError =
-                    widget.errorText != null || isValidatorError;
-
                 return Padding(
                   padding: EdgeInsets.only(
                     right: rightContentPadding,
-                    left: widget.suffixIcon == null && !isError
-                        ? 0
-                        : iconToInputFieldGap,
+                    left: widget.suffixIcon == null ? 0 : 10,
                   ),
-                  child: FittedBox(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (isError) errorIcon,
-                        if (isError && widget.suffixIcon != null)
-                          const SizedBox(
-                            width: errorIconToSuffixIconGap,
-                          ),
-                        if (widget.suffixIcon != null) widget.suffixIcon!,
-                      ],
-                    ),
-                  ),
+                  child: (widget.suffixIcon != null)
+                      ? FittedBox(child: widget.suffixIcon!)
+                      : null,
                 );
               }(),
               isDense: true,

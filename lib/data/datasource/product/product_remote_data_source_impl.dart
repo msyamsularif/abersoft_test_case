@@ -41,8 +41,8 @@ class ProductRemoteDataSourceImpl extends ProductRemoteDataSource {
       );
 
       if (response.statusCode == 200) {
-        final jsonData = response.data;
-        return right(ProductDataModel.fromJson(jsonData));
+        final data = response.data;
+        return right(ProductDataModel.fromJson(data));
       } else {
         throw DioException;
       }
