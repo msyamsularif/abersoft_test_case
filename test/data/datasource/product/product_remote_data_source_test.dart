@@ -22,13 +22,10 @@ void main() {
     productDataSource = ProductRemoteDataSourceImpl(mockDio);
   });
 
-  // Path file for mock data
-  String filePath = '/path/to/mock_file.jpg';
-
-  ProductDataModel tProductDataMode = ProductDataModel(
+  ProductDataModel tProductDataMode = const ProductDataModel(
     id: 1,
     name: 'Product 1',
-    imageUrl: filePath,
+    imageUrl: ConstantAssets.abersoftLogo,
     desc: 'this is product 1',
   );
 
@@ -105,17 +102,15 @@ void main() {
           ),
         );
 
-        IOOverrides.runZoned(() async {
-          // act
-          final result = await productDataSource.createProduct(
-            name: tProductDataMode.name,
-            image: File(tProductDataMode.imageUrl),
-            desc: tProductDataMode.desc,
-          );
+        // act
+        final result = await productDataSource.createProduct(
+          name: tProductDataMode.name,
+          image: File(tProductDataMode.imageUrl),
+          desc: tProductDataMode.desc,
+        );
 
-          // assert
-          expect(result, isA<Right<Failure, ProductDataModel>>());
-        });
+        // assert
+        expect(result, isA<Right<Failure, ProductDataModel>>());
       },
     );
     test(
