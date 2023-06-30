@@ -82,6 +82,8 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 25),
               ElevatedButton(
                 onPressed: () {
+                  FocusManager.instance.primaryFocus?.unfocus();
+
                   if (_formKey.currentState!.validate()) {
                     _authCubit.signIn(
                       username: _usernameController.text,
