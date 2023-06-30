@@ -1,5 +1,5 @@
 class ConstantName {
-  static const baseUrl = 'https://12045832-ee34-4f68-9cef-9b818cf30484.mock.pstmn.io';
+  static const baseUrl = 'https://2e3d13cc-3d6d-4911-b94c-ba23cf332933.mock.pstmn.io/api/v1';
   static const pathUrlLogin = '/login';
   static const pathUrlProduct = '/products';
   static const keyToken = 'get-token';
