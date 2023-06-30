@@ -17,6 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   late final AuthCubit _authCubit;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -39,67 +40,87 @@ class _LoginPageState extends State<LoginPage> {
           vertical: 84,
           horizontal: 66,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              width: 235,
-              height: 53,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(ConstantAssets.abersoftLogo),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                width: 235,
+                height: 53,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(ConstantAssets.abersoftLogo),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 120),
-            CTTextField(
-              controller: _usernameController,
-              labelText: 'Username',
-            ),
-            const SizedBox(height: 16),
-            CTTextField(
-              controller: _passwordController,
-              labelText: 'Password',
-              obscureText: true,
-            ),
-            const SizedBox(height: 25),
-            ElevatedButton(
-              onPressed: () {
-                _authCubit.signIn(
-                  username: _usernameController.text,
-                  password: _passwordController.text,
-                );
-              },
-              child: BlocConsumer<AuthCubit, AuthState>(
-                listener: (context, state) {
-                  if (state is AuthFailure) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        backgroundColor: Colors.red.shade400,
-                        content: Text(state.message),
-                      ),
-                    );
-                  } else if (state is AuthLoaded) {
-                    // Navigator.pushNamed(context, ProductPage.routName);
-                    Navigator.pushNamedAndRemoveUntil(context, ProductPage.routName, (route) => false);
+              const SizedBox(height: 120),
+              CTTextField(
+                controller: _usernameController,
+                labelText: 'Username',
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Username cannot be empty';
                   }
-                },
-                builder: (context, state) {
-                  if (state is AuthLoading) {
-                    return const SizedBox(
-                      width: 12,
-                      height: 12,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                      ),
-                    );
-                  } else {
-                    return const Text('login');
-                  }
+
+                  return null;
                 },
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+              CTTextField(
+                controller: _passwordController,
+                labelText: 'Password',
+                obscureText: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Password cannot be empty';
+                  }
+
+                  return null;
+                },
+              ),
+              const SizedBox(height: 25),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _authCubit.signIn(
+                      username: _usernameController.text,
+                      password: _passwordController.text,
+                    );
+                  }
+                },
+                child: BlocConsumer<AuthCubit, AuthState>(
+                  listener: (context, state) {
+                    if (state is AuthFailure) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.red.shade400,
+                          content: Text(state.message),
+                        ),
+                      );
+                    } else if (state is AuthLoaded) {
+                      // Navigator.pushNamed(context, ProductPage.routName);
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, ProductPage.routName, (route) => false);
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is AuthLoading) {
+                      return const SizedBox(
+                        width: 12,
+                        height: 12,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      );
+                    } else {
+                      return const Text('login');
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
